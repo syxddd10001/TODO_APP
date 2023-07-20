@@ -1,81 +1,129 @@
-import React,{ useState } from 'react';
+import React,{ useState, Component } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { StyleSheet, Text, Button, View, SafeAreaView, SafeAreaProvider, Image, TextInput } from 'react-native';
+import { StyleSheet, Text, Button, View, SafeAreaView, Animated, SafeAreaProvider, Image, TextInput, TouchableHighlight, TouchableOpacity } from 'react-native';
 import GlobalStyles from './GlobalStyles';
+import { SwipeListView } from 'react-native-swipe-list-view';
+
+const Stack = createNativeStackNavigator();
 
 
 function HomeScreen({navigation}) {
   return (
+    <>
     <SafeAreaView style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text>Home Screen</Text>
-      <Button title='LIST' onPress={() => navigation.navigate('ListScreen')}></Button>
     </SafeAreaView>
+    <SafeAreaView style={{ flexDirection: 'row'}}>   
+      <TouchableOpacity onPress={() => navigation.navigate('Tasks') }> 
+        <View>
+         <Image source={require('./assets/tasks_icon.png')} style={{ width: 100, height: 84, color: 'transparent'}}/>
+
+        </View>
+      </TouchableOpacity>
+      
+      <TouchableOpacity onPress={() => navigation.navigate('Lists') }> 
+        <View>
+         <Image source={require('./assets/online-shopping.png')} style={{ width: 80, height: 80, color: 'transparent'}}/>
+        </View>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => navigation.navigate('Tasks') }> 
+        <View>
+         <Image source={require('./assets/calendar.png')} style={{ width: 80, height: 80, color: 'transparent'}}/>
+
+        </View>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => navigation.navigate('Tasks') }> 
+        <View>
+         <Image source={require('./assets/settings.png')} style={{ width: 80, height: 80, color: 'transparent'}}/>
+        </View>
+      </TouchableOpacity>
+    </SafeAreaView>
+    
+    </>
   );
 }
-function ListScreen({navigation}) {
+
+function ListScreen({navigation}){
+  return(
+    <>
+      
+    </>
+  )
+}
+
+
+function TaskScreen({navigation}){
   const [textInputs, setTextInputs] = useState([]);
-  const addTextBox = () => {
+  const [textBoxName, setTextBoxName] = useState('oldName');
+
+  const handleRenameTextBox = (newName) => {
+    setTextBoxName(newName);
+  };
+  const addButton = () => {
     setTextInputs((prevInputs) => [
       ...prevInputs,
       { id: Date.now().toString(), value: '' },
     ]);
   };
-
   const removeTextBox = (id) => {
     setTextInputs((prevInputs) =>
       prevInputs.filter((textInput) => textInput.id !== id)
     );
   };
 
-  const handleInputChange = (id, text) => {
-    setTextInputs((prevInputs) =>
-      prevInputs.map((textInput) =>
-        textInput.id === id ? { ...textInput, value: text } : textInput
-      )
-    );
-  };
-  
-  return (
+  return(
     <>
-        <Text></Text>
-        <Text></Text>
-    <SafeAreaView style={GlobalStyles.droidSafeArea}>      
-      <Text style={{color:'black',fontSize:35}}>TO DO LIST MAKER</Text>
-      <Text style={{color:'black',}}>Add To Do Items</Text>
-      {textInputs.map((textInput, index) => (
-        <View key={textInput.id} style={styles.textBoxContainer}>
-          <Text style={styles.number}>{index + 1}</Text>
-          <TextInput
-            style={styles.textBox}
-            value={textInput.value}
-            onChangeText={(text) => handleInputChange(textInput.id, text)}
-          />
-            <Button
-              marginLeft= "10px"
-              color = "brown"
-              title="DEL"
-              onPress={() => removeTextBox(textInput.id)}  
-            />      
-          
-        </View>
+    
+      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="Tasks" component={TaskScreen} />
+      <Stack.Screen name="Lists" component={ListScreen} />
+
+  
+      <SafeAreaView style = {{flex: 1, alignItems: 'center'}}>
         
-      ))}
-      <Button title="             +            " onPress={addTextBox} color="lightgreen" />   
-    </SafeAreaView>
+        
+        <Text style ={{fontSize:30}}> TASKS </Text>
+        {
+          textInputs.map((textInput, index) => (
+          <View key={textInput.id} style={styles.textBoxContainer}>
+            <Text style={styles.number}>{index + 1}</Text>
+            <TouchableOpacity onLongPress={() => removeTextBox(textInput.id)}> 
+            <View>  
+            <Text>TASK</Text>    
+            </View>
+            </TouchableOpacity> 
+               
+          </View>
+          
+          
+        ))}
+        
+        <TouchableOpacity onPress={ addButton }> 
+        <View>
+         <Image source={require('./assets/addButton.png')} style={{ width: 70, height: 70}}/>    
+        </View>
+        </TouchableOpacity>
+      </SafeAreaView>
+    
+            
+
     </>
-  );
+  )
 }
 
-const Stack = createNativeStackNavigator();
 
 function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="ListScreen" component={ListScreen} />
+        <Stack.Screen name="Tasks" component={TaskScreen} />
+        <Stack.Screen name="Lists" component={ListScreen} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -87,6 +135,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  
   textBoxContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -98,9 +147,13 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: 'bold',
   },
-  buttons: {
-
-  },
+  buttonStyle: {
+    flex: 1,
+    backgroundColor: 'red',
+    marginLeft: 5,
+    marginRight: 5,
+    borderRadius: 50
+},
   textBox: {
     flex: 1,
     height: 40, 
