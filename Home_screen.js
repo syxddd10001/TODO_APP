@@ -1,98 +1,50 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, Button, View, SafeAreaView, SafeAreaProvider, Image, TextInput } from 'react-native';
+import { StyleSheet, Text, Button, View, SafeAreaView, SafeAreaProvider, Image, TextInput, TouchableOpacity } from 'react-native';
 import GlobalStyles from './GlobalStyles';
 import React, { useState } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import tasks from './tasks';
 
-export default function App() {
+const HomeScreen = ({navigation}) =>{
+return (
+  <>
   
-  function TaskScreen({navigation}) {
-    const [textInputs, setTextInputs] = useState([]);
-    const addTextBox = () => {
-      setTextInputs((prevInputs) => [
-        ...prevInputs,
-        { id: Date.now().toString(), value: '' },
-      ]);
-    };
+  <SafeAreaView style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <Text style={{fontSize:25, fontFamily:"monospace"}}>TO DO LIST MAKER</Text>
+    <Text style={{fontFamily:"monospace"}}>Simple To Do List maker</Text>
+
+  </SafeAreaView>
   
-    const removeTextBox = (id) => {
-      setTextInputs((prevInputs) =>
-        prevInputs.filter((textInput) => textInput.id !== id)
-      );
-    };
-  
-    const handleInputChange = (id, text) => {
-      setTextInputs((prevInputs) =>
-        prevInputs.map((textInput) =>
-          textInput.id === id ? { ...textInput, value: text } : textInput
-        )
-      );
-    };
+  <SafeAreaView style={{ flexDirection: 'row', flex: 1, justifyContent:'center', alignItems:'flex-end', alignContent:'space-between'}}>   
+    <TouchableOpacity onPress={() => navigation.navigate('Tasks') }> 
+      <View>
+       <Image source={require('./assets/tasks_icon.png')} style={{ width: 100, height: 84, color: 'transparent'}}/>
+       <Text style={{}}>       TASKS</Text>
+
+      </View>
+    </TouchableOpacity>
     
+    <TouchableOpacity onPress={() => navigation.navigate('Lists') }> 
+      <View>
+       <Image source={require('./assets/online-shopping.png')} style={{ width: 80, height: 80, color: 'transparent'}}/>
+       <Text style={{}}>  TASK LIST</Text>
+
+      </View>
+    </TouchableOpacity>
+
     
+
+    <TouchableOpacity onPress={() => navigation.navigate('Tasks') }> 
+      <View>
+       <Image source={require('./assets/settings.png')} style={{ width: 80, height: 80, color: 'transparent'}}/>
+       <Text style={{}}>    SETTINGS</Text>
+
+      </View>
+    </TouchableOpacity>
+  </SafeAreaView>
   
-    return (
-      <>
-          <Text></Text>
-          <Text></Text>
-      <SafeAreaView style={GlobalStyles.droidSafeArea}>      
-        <Text style={{color:'black',fontSize:35}}>TO DO LIST MAKER</Text>
-        <Text style={{color:'black',}}>Add To Do Items</Text>
-        {textInputs.map((textInput, index) => (
-          <View key={textInput.id} style={styles.textBoxContainer}>
-            <SwipeListView 
-              data={}
-              renderItem={}
-              renderHiddenItem={}  
-            />
-            
-  
-            <Text style={styles.number}>{index + 1}</Text>
-            <TextInput
-              style={styles.textBox}
-              value={textInput.value}
-              onChangeText={(text) => handleInputChange(textInput.id, text)}
-            />
-              <Button
-                marginLeft= "10px"
-                color = "brown"
-                title="DEL"
-                onPress={() => removeTextBox(textInput.id)}  
-              />      
-          </View>
-          
-        ))}
-        <Button title="             +            " onPress={addTextBox} color="lightgreen" />   
-      </SafeAreaView>
-      </>
-    );
-  }}
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  textBoxContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  number: {
-    marginRight: 10,
-    color: 'white',
-    fontSize: 12,
-    fontWeight: 'bold',
-  },
-  textBox: {
-    flex: 1,
-    height: 40,
-    borderColor: 'red',
-    borderWidth: 1,
-    paddingHorizontal: 10,
-    color: 'white',
-    borderRadius: 20,
-  },
-  removeButtonContainer: {
-    marginLeft: 10,
-  },
-});
+  </>
+);
+}
+
+export default HomeScreen;
