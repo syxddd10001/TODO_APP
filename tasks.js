@@ -1,24 +1,55 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, Button, Keyboard, View, SafeAreaView, SafeAreaProvider, Image, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
+import {StyleSheet, Text, Keyboard, View, SafeAreaView, SafeAreaProvider, Image, ScrollView, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
 import GlobalStyles from './GlobalStyles';
 import React, { useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
+import { SwipeListView } from 'react-native-swipe-list-view';
+import {GestureHandlerRootView , Gesture, TouchableHighlight, Swipeable } from 'react-native-gesture-handler';
+
+
+
+
 
 const theme_color = 'lightskyblue';
+const RightSwipeActions = ({ onComplete }) => {
+	return (
+	  <TouchableOpacity
+		onPress={onComplete}
+		style={{
+		  backgroundColor: 'red',
+		  justifyContent: 'center',
+		  alignItems: 'flex-end',
+		  borderRadius: 10,
+		  width: 80,
+		  height: 50,
+		}}
+	  >
+		<Text
+		  style={{
+			color: 'white',
+			alignSelf: 'center',
+			paddingHorizontal: 10,
+			paddingVertical: 10,
 
-const Task = (props) =>{
-	
-
+			
+		  }}
+		>
+		  Delete
+		</Text>
+	  </TouchableOpacity>
+	);
+  };
+const Task = ({text, onComplete}) =>{
 	return(
-		<>
-			<TouchableOpacity style={styles.rectangle} >
-				
-				<View style={styles.square}></View>	
-				<Text style={styles.TasksStyle}>{props.text}</Text>
-				<TouchableOpacity style={styles.circle}></TouchableOpacity>
-			</TouchableOpacity>
-		</>
-
+		<GestureHandlerRootView>
+			<Swipeable renderRightActions={() => <RightSwipeActions onComplete={onComplete} />}>
+				<View style={styles.rectangle} >	
+					<View style={styles.square}></View>	
+					<Text style={styles.TasksStyle}>{text}</Text>
+					<TouchableOpacity style={styles.circle} ></TouchableOpacity>
+				</View>
+			</Swipeable>
+		</GestureHandlerRootView>
 	);
 
 }
@@ -28,38 +59,39 @@ const TaskScreen = ({navigation}) =>{
 	const [taskItems, setTaskItems] = useState([]);
 	const [task, setTask] = useState();
 
-
 	const handleAddTask = () => {
 		if (task.trim()) {
 			Keyboard.dismiss();
 			setTaskItems([...taskItems, task]);
 			setTask('');
 		}
-	}
+	};
 	
 	const completeTask = (index) => {
 		const itemsCopy = [...taskItems]; // Create a copy of the taskItems array
 		itemsCopy.splice(index, 1); // Remove the task at the specified index
 		setTaskItems(itemsCopy); // Update the state with the modified array
 	};
-
+	
+	
 	return(
 	<>
 		<SafeAreaView style={styles.container}>
 			<View>
 				<Text style={styles.TitleText}>TASKS</Text>
-				
-				{
-					taskItems.map((item, index) => 
-						<TouchableOpacity key={index} onLongPress={ () => completeTask(index)}>
-						<Task  text={item} />
-						</TouchableOpacity>
-          	)
-				}
-				
+			
+				<ScrollView>
+					{taskItems.map((item, index) => (
+					<View key={index}>
+						<Task text={item} onComplete={() => completeTask(index)}/>
+					</View>
+						
+					))}
+				</ScrollView>
 				
 			</View>
-						
+		</SafeAreaView>
+		<SafeAreaView style={{}}>		
 				<KeyboardAvoidingView 
 					behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
 					style={styles.writeTaskWrapper}>
@@ -73,9 +105,9 @@ const TaskScreen = ({navigation}) =>{
 				</TouchableOpacity>
 
 				</KeyboardAvoidingView>
-
-			
 		</SafeAreaView>
+			
+		
 		
   </>
 	);
@@ -84,10 +116,9 @@ const TaskScreen = ({navigation}) =>{
 
 const styles = StyleSheet.create({
 
-			container:{
-				flex: 1,
-				backgroundColor: '#E8EAED',
-
+			container:{			
+				marginBottom: 170,
+				flex:1
 			},		
 
 			textWrapper:{
@@ -97,7 +128,7 @@ const styles = StyleSheet.create({
 			writeTaskWrapper: { 
 				position: 'absolute',
 				width: '100%',
-				bottom: 40,
+				bottom: 50,
 				flexDirection: 'row',
 				justifyContent: 'space-around',
 				alignItems: 'center',
@@ -171,8 +202,7 @@ const styles = StyleSheet.create({
 				padding: 15,
 				backgroundColor: 'white',
 				marginBottom: 15,
-				marginLeft: 15,
-				marginRight: 20,
+				
 				alignItems: 'center',
 				justifyContent: 'space-between'
 			},
