@@ -169,9 +169,13 @@ const TaskScreen = ({navigation}) =>{
 	return(
 	<>
 		<SafeAreaView style={styles.container}>
-			<View>
-				<Text style={styles.TitleText}>TASKS</Text>
-				
+			<SafeAreaView>
+				<View style={{flexDirection:'row', marginTop: 20, marginBottom: 20, marginLeft:10}}>
+					<TouchableOpacity onPress={()=>navigation.navigate('Home')}>
+						<Image source={require('../assets/backbutton.png')} style={{ width: 45, height: 45, color: 'transparent'}}/>					
+					</TouchableOpacity>
+					<Text style={styles.TitleText} >TASKS</Text>
+				</View>
 				<ScrollView>
 					{taskItems.map((item, index) => (
 					<View key={index}>
@@ -181,7 +185,7 @@ const TaskScreen = ({navigation}) =>{
 					))}
 				</ScrollView>
 				
-			</View>
+			</SafeAreaView>
 		</SafeAreaView>
 		<SafeAreaView style={{}}>		
 				<KeyboardAvoidingView 
@@ -276,13 +280,15 @@ const styles = StyleSheet.create({
 				fontSize: 24,
 				fontWeight: 'bold',
 				marginBottom: 10,
+				justifyContent: 'center',
+				marginLeft: 95
 			},
 
 			square:{
 				width: 21,
 				height: 21,
 				borderRadius: 7,
-				backgroundColor: theme_color,
+				backgroundColor: 'limegreen',
 				opacity: 0.7, 
 				marginRight: 15,
 				flexWrap: 'wrap',

@@ -35,7 +35,7 @@ function SettingsScreen({navigation}){
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
+      <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Tasks" component={TaskScreen} />
         <Stack.Screen name="Completed" component={CompletedScreen} />

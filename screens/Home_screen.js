@@ -4,30 +4,42 @@ import GlobalStyles from './GlobalStyles';
 import React, { useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import TaskScreen from './tasks'
+import LinearGradient from 'react-native-linear-gradient';
+
+
+const theme_color = 'lightskyblue';
+
 
 const HomeScreen = ({navigation}) =>{
 return (
   <>
   
-  <SafeAreaView style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+  <SafeAreaView style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingBottom: 400, backgroundColor: 'bisque' }}>
     <Text style={{fontSize:25, fontFamily:"monospace"}}>TO DO LIST MAKER</Text>
     <Text style={{fontFamily:"monospace"}}>Simple To Do List maker</Text>
-
-  </SafeAreaView>
   
-  <SafeAreaView style={{ flexDirection: 'row', flex: 1, justifyContent:'center', alignItems:'flex-end', alignContent:'space-between'}}>   
+  </SafeAreaView>  
+  
+  <SafeAreaView style={styles.bottombar}>     
+    
     <TouchableOpacity onPress={() => navigation.navigate('Tasks') }> 
-      <View>
-       <Image source={require('../assets/tasks_icon.png')} style={{ width: 100, height: 84, color: 'transparent'}}/>
-       <Text style={{}}>       TASKS</Text>
-
+    
+      <View>  
+       <View style={styles.icons}>
+        <Image source={require('../assets/task_2.png')} style={{ width: 64, height: 64}}/>
+       </View>
+       <Text style={{alignSelf: 'center'}}>TASKS</Text>
+       
       </View>
     </TouchableOpacity>
     
     <TouchableOpacity onPress={() => navigation.navigate('Completed') }> 
       <View>
-       <Image source={require('../assets/check-mark.png')} style={{ width: 70, height: 70, color: 'transparent'}}/>
-       <Text style={{}}>COMPLETED </Text>
+        <View style={styles.icons}>
+       <Image source={require('../assets/taskcompleted2.png')} style={{ width: 64, height: 64}}/>
+      
+       </View>
+       <Text style={{alignSelf: 'center'}}>FINISHED</Text>
 
       </View>
     </TouchableOpacity>
@@ -35,9 +47,9 @@ return (
     
 
     <TouchableOpacity onPress={() => navigation.navigate('Tasks') }> 
-      <View>
-       <Image source={require('../assets/settings.png')} style={{ width: 80, height: 80, color: 'transparent'}}/>
-       <Text style={{}}>    SETTINGS</Text>
+      <View >
+       <Image source={require('../assets/settings2.png')} style={{ width: 70, height: 70}}/>
+       <Text style={{alignSelf: 'center'}}>SETTINGS</Text>
 
       </View>
     </TouchableOpacity>
@@ -46,5 +58,27 @@ return (
   </>
 );
 }
+
+styles = StyleSheet.create({
+  icons: {
+				backgroundColor: 'transparent',
+        
+				alignItems: 'center',
+				justifyContent: 'space-between',
+        
+        
+  },
+
+  bottombar:{ 
+      flexDirection: 'row',       
+			justifyContent: 'space-between',
+      backgroundColor: 'bisque'
+  },
+ 
+
+
+
+});
+
 
 export default HomeScreen;
