@@ -1,20 +1,17 @@
 import { StatusBar } from 'expo-status-bar';
-import {StyleSheet, Text, Keyboard, View, SafeAreaView, SafeAreaProvider, Image, ScrollView, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
+import { StyleSheet, Text, Keyboard, View, SafeAreaView, SafeAreaProvider, Image, ScrollView, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
 import GlobalStyles from './GlobalStyles';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { SwipeListView } from 'react-native-swipe-list-view';
-import {GestureHandlerRootView , Gesture, TouchableHighlight, Swipeable } from 'react-native-gesture-handler';
-
-
-
-
+import { GestureHandlerRootView , Gesture, TouchableHighlight, Swipeable } from 'react-native-gesture-handler';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const theme_color = 'lightskyblue';
-const RightSwipeActions = ({ onComplete }) => {
+const RightSwipeActions = ({ onDelete }) => {
 	return (
 	  <TouchableOpacity
-		onPress={onComplete}
+		onPress={onDelete}
 		style={{
 		  backgroundColor: 'red',
 		  justifyContent: 'center',
@@ -39,10 +36,12 @@ const RightSwipeActions = ({ onComplete }) => {
 	  </TouchableOpacity>
 	);
   };
-const Task = ({text, onComplete}) =>{
+const Task = ({text, onDelete}) =>{
+	
+	
 	return(
 		<GestureHandlerRootView>
-			<Swipeable renderRightActions={() => <RightSwipeActions onComplete={onComplete} />}>
+			<Swipeable renderRightActions={() => <RightSwipeActions onDelete={ onDelete } />} renderLeftActions={() => null}>
 				<View style={styles.rectangle} >	
 					<View style={styles.square}></View>	
 					<Text style={styles.TasksStyle}>{text}</Text>
@@ -59,6 +58,39 @@ const TaskScreen = ({navigation}) =>{
 	const [taskItems, setTaskItems] = useState([]);
 	const [task, setTask] = useState();
 
+	useEffect(() => {
+		loadDataFromStorage();
+	}, []);
+
+	useEffect(() => {
+		saveDataToStorage();
+	  }, [taskItems]);
+
+
+	const loadDataFromStorage = async () => {
+		try{
+			const data = await AsyncStorage.getItem('taskItems');
+			if (data !== null){
+				setTaskItems(JSON.parse(data));
+			} 
+		} catch (error){
+			console.error('error loading data from storage', error);
+		}
+
+	};
+
+	const saveDataToStorage = async () => {
+		try{
+			const dataToSave = JSON.stringify(taskItems);
+			await AsyncStorage.setItem('taskItems', dataToSave);
+		} catch (error){
+			console.error('Error saving data to storage', error);
+		}
+		
+	}
+
+
+
 	const handleAddTask = () => {
 		if (task.trim()) {
 			Keyboard.dismiss();
@@ -67,10 +99,10 @@ const TaskScreen = ({navigation}) =>{
 		}
 	};
 	
-	const completeTask = (index) => {
-		const itemsCopy = [...taskItems]; // Create a copy of the taskItems array
-		itemsCopy.splice(index, 1); // Remove the task at the specified index
-		setTaskItems(itemsCopy); // Update the state with the modified array
+	const deleteTask = (index) => {
+		const itemsCopy = [...taskItems]; 
+		itemsCopy.splice(index, 1); 
+		setTaskItems(itemsCopy); 
 	};
 	
 	
@@ -83,7 +115,7 @@ const TaskScreen = ({navigation}) =>{
 				<ScrollView>
 					{taskItems.map((item, index) => (
 					<View key={index}>
-						<Task text={item} onComplete={() => completeTask(index)}/>
+						<Task text={item} onDelete={() => deleteTask(index)}/>
 					</View>
 						
 					))}
