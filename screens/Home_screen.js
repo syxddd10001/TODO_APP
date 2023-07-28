@@ -3,7 +3,7 @@ import { StyleSheet, Text, Button, View, SafeAreaView, SafeAreaProvider, Image, 
 import GlobalStyles from './GlobalStyles';
 import React, { useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import tasks from './tasks';
+import TaskScreen from './tasks'
 
 const HomeScreen = ({navigation}) =>{
 return (
@@ -18,16 +18,16 @@ return (
   <SafeAreaView style={{ flexDirection: 'row', flex: 1, justifyContent:'center', alignItems:'flex-end', alignContent:'space-between'}}>   
     <TouchableOpacity onPress={() => navigation.navigate('Tasks') }> 
       <View>
-       <Image source={require('./assets/tasks_icon.png')} style={{ width: 100, height: 84, color: 'transparent'}}/>
+       <Image source={require('../assets/tasks_icon.png')} style={{ width: 100, height: 84, color: 'transparent'}}/>
        <Text style={{}}>       TASKS</Text>
 
       </View>
     </TouchableOpacity>
     
-    <TouchableOpacity onPress={() => navigation.navigate('Lists') }> 
+    <TouchableOpacity onPress={() => navigation.navigate('Completed') }> 
       <View>
-       <Image source={require('./assets/online-shopping.png')} style={{ width: 80, height: 80, color: 'transparent'}}/>
-       <Text style={{}}>  TASK LIST</Text>
+       <Image source={require('../assets/check-mark.png')} style={{ width: 70, height: 70, color: 'transparent'}}/>
+       <Text style={{}}>COMPLETED </Text>
 
       </View>
     </TouchableOpacity>
@@ -36,7 +36,7 @@ return (
 
     <TouchableOpacity onPress={() => navigation.navigate('Tasks') }> 
       <View>
-       <Image source={require('./assets/settings.png')} style={{ width: 80, height: 80, color: 'transparent'}}/>
+       <Image source={require('../assets/settings.png')} style={{ width: 80, height: 80, color: 'transparent'}}/>
        <Text style={{}}>    SETTINGS</Text>
 
       </View>

@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, Keyboard, View, SafeAreaView, SafeAreaProvider, Image, ScrollView, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
+import { Button, StyleSheet, Text, Keyboard, View, SafeAreaView, SafeAreaProvider, Image, ScrollView, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
 import GlobalStyles from './GlobalStyles';
 import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
@@ -8,7 +8,7 @@ import { GestureHandlerRootView , Gesture, TouchableHighlight, Swipeable } from 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const theme_color = 'lightskyblue';
-const RightSwipeActions = ({ onDelete }) => {
+export const RightSwipeActions = ({ onDelete }) => {
 	return (
 	  <TouchableOpacity
 		onPress={onDelete}
@@ -36,27 +36,69 @@ const RightSwipeActions = ({ onDelete }) => {
 	  </TouchableOpacity>
 	);
   };
-const Task = ({text, onDelete}) =>{
+
+  const LeftSwipeActions = ({ onComplete }) => {
+	return (
+	  <TouchableOpacity
+		onPress={onComplete}
+		style={{
+		  backgroundColor: 'green',
+		  justifyContent: 'center',
+		  alignItems: 'flex-end',
+		  borderRadius: 10,
+		  width: 80,
+		  height: 50,
+		}}
+	  >
+		<Text
+		  style={{
+			color: 'white',
+			alignSelf: 'center',
+			paddingHorizontal: 10,
+			paddingVertical: 10,	
+		  }}
+		>
+		  Done
+		</Text>
+	  </TouchableOpacity>
+	);
+};
+
+export const Task = ({text, onDelete, onComplete}) =>{
 	
 	
 	return(
 		<GestureHandlerRootView>
-			<Swipeable renderRightActions={() => <RightSwipeActions onDelete={ onDelete } />} renderLeftActions={() => null}>
+			<Swipeable renderRightActions={() => <RightSwipeActions onDelete={ onDelete } />} renderLeftActions={() => <LeftSwipeActions onComplete={ onComplete } />}>
 				<View style={styles.rectangle} >	
 					<View style={styles.square}></View>	
 					<Text style={styles.TasksStyle}>{text}</Text>
-					<TouchableOpacity style={styles.circle} ></TouchableOpacity>
+					
 				</View>
 			</Swipeable>
 		</GestureHandlerRootView>
 	);
 
 }
-
+export const loadCompletedTasksFromStorage = async () => {
+	try {
+	  const data = await AsyncStorage.getItem('completedTasks');
+	  if (data !== null) {
+	    return JSON.parse(data);
+	  } else {
+	    return [];
+	  }
+	} catch (error) {
+	  console.error('Error loading data from AsyncStorage:', error);
+	  return [];
+	}
+      };
 
 const TaskScreen = ({navigation}) =>{
 	const [taskItems, setTaskItems] = useState([]);
 	const [task, setTask] = useState();
+	const [completedTasks, setCompletedTaskItems] = useState([]);
+
 
 	useEffect(() => {
 		loadDataFromStorage();
@@ -69,9 +111,12 @@ const TaskScreen = ({navigation}) =>{
 
 	const loadDataFromStorage = async () => {
 		try{
-			const data = await AsyncStorage.getItem('taskItems');
-			if (data !== null){
-				setTaskItems(JSON.parse(data));
+			const data_0 = await AsyncStorage.getItem('taskItems');
+			const data_1 = await AsyncStorage.getItem('completedTasks');
+			
+			if (data_0 !== null){
+				setTaskItems(JSON.parse(data_0));
+				setCompletedTaskItems(JSON.parse(data_1));		
 			} 
 		} catch (error){
 			console.error('error loading data from storage', error);
@@ -81,8 +126,12 @@ const TaskScreen = ({navigation}) =>{
 
 	const saveDataToStorage = async () => {
 		try{
-			const dataToSave = JSON.stringify(taskItems);
-			await AsyncStorage.setItem('taskItems', dataToSave);
+			const dataToSave_0 = JSON.stringify(taskItems);
+			const dataToSave_1 = JSON.stringify(completedTasks);
+
+			await AsyncStorage.setItem('taskItems', dataToSave_0);
+			await AsyncStorage.setItem('completedTasks', dataToSave_1);
+			
 		} catch (error){
 			console.error('Error saving data to storage', error);
 		}
@@ -92,17 +141,28 @@ const TaskScreen = ({navigation}) =>{
 
 
 	const handleAddTask = () => {
-		if (task.trim()) {
+		if (task != ''){
 			Keyboard.dismiss();
+			
 			setTaskItems([...taskItems, task]);
 			setTask('');
 		}
+		
 	};
+
+	
 	
 	const deleteTask = (index) => {
 		const itemsCopy = [...taskItems]; 
 		itemsCopy.splice(index, 1); 
 		setTaskItems(itemsCopy); 
+	};
+
+	const completeTask = (index) => {
+		const itemsCopy = [...taskItems];
+		const completedTask = itemsCopy.splice(index, 1)[0]; // Remove the task and get the removed item
+		setTaskItems(itemsCopy); // Update the state with the modified array
+		setCompletedTaskItems([...completedTasks, completedTask]);
 	};
 	
 	
@@ -111,11 +171,11 @@ const TaskScreen = ({navigation}) =>{
 		<SafeAreaView style={styles.container}>
 			<View>
 				<Text style={styles.TitleText}>TASKS</Text>
-			
+				
 				<ScrollView>
 					{taskItems.map((item, index) => (
 					<View key={index}>
-						<Task text={item} onDelete={() => deleteTask(index)}/>
+						<Task text={item} onDelete={() => deleteTask(index)} onComplete={() => completeTask(index)}/>
 					</View>
 						
 					))}
