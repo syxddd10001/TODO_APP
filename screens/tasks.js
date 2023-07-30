@@ -6,8 +6,10 @@ import { NavigationContainer } from '@react-navigation/native';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { GestureHandlerRootView , Gesture, TouchableHighlight, Swipeable } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import * as Font from 'expo-font';
+import {LinearGradient} from 'expo-linear-gradient';
 const theme_color = 'lightskyblue';
+
 export const RightSwipeActions = ({ onDelete }) => {
 	return (
 	  <TouchableOpacity
@@ -27,8 +29,7 @@ export const RightSwipeActions = ({ onDelete }) => {
 			alignSelf: 'center',
 			paddingHorizontal: 10,
 			paddingVertical: 10,
-
-			
+			fontFamily: 'Quicksand'		
 		  }}
 		>
 		  Delete
@@ -55,7 +56,8 @@ export const RightSwipeActions = ({ onDelete }) => {
 			color: 'white',
 			alignSelf: 'center',
 			paddingHorizontal: 10,
-			paddingVertical: 10,	
+			paddingVertical: 10,
+			fontFamily: 'Quicksand'	
 		  }}
 		>
 		  Done
@@ -64,8 +66,25 @@ export const RightSwipeActions = ({ onDelete }) => {
 	);
 };
 
-export const Task = ({text, onDelete, onComplete}) =>{
-	
+export const Task = ({text, onDelete, onComplete, timeStamp}) =>{
+	const [isFontLoaded, setFontLoaded] = useState(false);
+
+	useEffect(() => {
+	const loadFont = async () => {
+	await Font.loadAsync({
+		'Quicksand': require('../assets/fonts/Quicksand.ttf'),
+	});
+
+	setFontLoaded(true);
+	};
+
+	loadFont();
+	}, []);
+
+	if (!isFontLoaded) {
+	// Font is still loading, you can show a loading screen or fallback font here
+	return <Text>Loading...</Text>;
+	}
 	
 	return(
 		<GestureHandlerRootView>
@@ -98,7 +117,9 @@ const TaskScreen = ({navigation}) =>{
 	const [taskItems, setTaskItems] = useState([]);
 	const [task, setTask] = useState();
 	const [completedTasks, setCompletedTaskItems] = useState([]);
+	const [isFontLoaded, setFontLoaded] = useState(false);
 
+	
 
 	useEffect(() => {
 		loadDataFromStorage();
@@ -116,8 +137,10 @@ const TaskScreen = ({navigation}) =>{
 			
 			if (data_0 !== null){
 				setTaskItems(JSON.parse(data_0));
-				setCompletedTaskItems(JSON.parse(data_1));		
 			} 
+			if (data_1 != null){
+				setCompletedTaskItems(JSON.parse(data_1));		
+			}
 		} catch (error){
 			console.error('error loading data from storage', error);
 		}
@@ -168,13 +191,20 @@ const TaskScreen = ({navigation}) =>{
 	
 	return(
 	<>
+		
+
+		<LinearGradient
+		colors={['#8e54e9','#4776e6','#8e54e9']} // Define your gradient colors here
+		start={{ x: 0, y: 0 }}
+		end={{ x: 1, y: 1 }}
+		style={styles.container2}>
 		<SafeAreaView style={styles.container}>
 			<SafeAreaView>
-				<View style={{flexDirection:'row', marginTop: 20, marginBottom: 20, marginLeft:10}}>
+				<View style={{flexDirection:'row', marginBottom: 20, paddingTop: 50}}>
 					<TouchableOpacity onPress={()=>navigation.navigate('Home')}>
-						<Image source={require('../assets/backbutton.png')} style={{ width: 45, height: 45, color: 'transparent'}}/>					
+						<Image source={require('../assets/back_2.png')} style={{ width: 45, height: 45, color: 'transparent'}}/>					
 					</TouchableOpacity>
-					<Text style={styles.TitleText} >TASKS</Text>
+					<Text style={styles.TitleText}>TASKS</Text>
 				</View>
 				<ScrollView>
 					{taskItems.map((item, index) => (
@@ -196,13 +226,13 @@ const TaskScreen = ({navigation}) =>{
 				<TouchableOpacity style={styles.textWrapper} onPress={() => handleAddTask()}>
 				
 					<View style={styles.addWrapper}>
-						<Text> + </Text>
+						<Text style={{fontFamily: 'Quicksand'}}> + </Text>
 					</View>
 				</TouchableOpacity>
 
 				</KeyboardAvoidingView>
 		</SafeAreaView>
-			
+		</LinearGradient>
 		
 		
   </>
@@ -216,7 +246,10 @@ const styles = StyleSheet.create({
 				marginBottom: 170,
 				flex:1
 			},		
-
+			container2:{			
+				
+				flex:1
+			},
 			textWrapper:{
 				
 			},
@@ -228,6 +261,7 @@ const styles = StyleSheet.create({
 				flexDirection: 'row',
 				justifyContent: 'space-around',
 				alignItems: 'center',
+				
 			},
 			input: {
 				paddingVertical: 13,
@@ -237,7 +271,7 @@ const styles = StyleSheet.create({
 				borderRadius: 60,
 				borderColor: '#C0C0C0',
 				borderWidth: 1,
-
+				fontFamily: 'Quicksand'
 			},
 
 			addWrapper:{
@@ -248,6 +282,7 @@ const styles = StyleSheet.create({
 				justifyContent: 'center',
 				alignItems: 'center',
 				borderWidth: 0.4,
+				
 			},
 
 			addText:{
@@ -272,23 +307,25 @@ const styles = StyleSheet.create({
 				textAlign: 'left',
 				maxWidth: '80%',
 				marginRight: 20,
-					
+				fontFamily: 'Quicksand',
 			},
 
 			TitleText: {
-				alignSelf: 'center',
+				
 				fontSize: 24,
-				fontWeight: 'bold',
+				fontFamily: 'Quicksand',
 				marginBottom: 10,
-				justifyContent: 'center',
-				marginLeft: 95
+				
+				
+				color: 'white',
+
 			},
 
 			square:{
 				width: 21,
 				height: 21,
 				borderRadius: 7,
-				backgroundColor: 'limegreen',
+				backgroundColor: 'darkviolet',
 				opacity: 0.7, 
 				marginRight: 15,
 				flexWrap: 'wrap',

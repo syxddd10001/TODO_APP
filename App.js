@@ -1,6 +1,6 @@
 import React,{ useState, Component } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StyleSheet, Text, Button, View, SafeAreaView, Animated, SafeAreaProvider, Image, TextInput, TouchableHighlight, TouchableOpacity } from 'react-native';
 
@@ -9,38 +9,26 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from './screens/Home_screen'
 import TaskScreen from './screens/tasks'
 import CompletedScreen from './screens/completed'
-
+import SettingsScreen from './screens/settings'
+import * as SystemUI from 'expo-system-ui';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 
-
-
-function CalendarScreen({navigation}){
-  return(
-    <>
-      
-    </>
-  )
-}
-function SettingsScreen({navigation}){
-  return(
-    <>
-      
-    </>
-  )
-}
-
-
 const App = () => {
+  
   return (
-    <NavigationContainer>
+    <>   
+    <NavigationContainer theme={DarkTheme}>
       <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Tasks" component={TaskScreen} />
         <Stack.Screen name="Completed" component={CompletedScreen} />
+        <Stack.Screen name="Settings" component={SettingsScreen} />
+
       </Stack.Navigator>
     </NavigationContainer>
+    </>
   );
 }
 

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Text, StyleSheet, SafeAreaView, View, ScrollView, TouchableOpacity } from 'react-native';
+import { StatusBar, Image, Text, StyleSheet, SafeAreaView, View, ScrollView, TouchableOpacity } from 'react-native';
 import { loadCompletedTasksFromStorage } from './tasks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GestureHandlerRootView , Gesture, TouchableHighlight, Swipeable } from 'react-native-gesture-handler';
 import { NavigationContainer, useIsFocused } from '@react-navigation/native';
-
+import * as Font from 'expo-font';
+import {LinearGradient} from 'expo-linear-gradient';
 const RightSwipeActions = ({ onDelete }) => {
 	return (
 	  <TouchableOpacity
@@ -24,7 +25,7 @@ const RightSwipeActions = ({ onDelete }) => {
 			alignSelf: 'center',
 			paddingHorizontal: 10,
 			paddingVertical: 10,
-
+			fontFamily: 'Quicksand'
 			
 		  }}
 		>
@@ -44,7 +45,7 @@ const RightSwipeActions = ({ onDelete }) => {
 	const loadData = async () => {
 	  try {
 		const data = await loadCompletedTasksFromStorage();
-		setCompletedTasks(data || []); // Ensure data is an array or default to an empty array
+		if (data != null) setCompletedTasks(data); // Ensure data is an array or default to an empty array
 	  } catch (error) {
 		console.error('Error loading data from AsyncStorage:', error);
 	  }
@@ -86,38 +87,54 @@ const RightSwipeActions = ({ onDelete }) => {
 	}, [navigation, completedTasks]);
   
 	return (
+	  
 	  <>
-		<SafeAreaView style={styles.container}>
-		  <View>
-			<Text style={styles.titleContainer}>COMPLETED TASKS</Text>
-  
-			<ScrollView>
-			  {completedTasks.map((item, index) => (
-				<GestureHandlerRootView key={index}>
-				  <Swipeable renderRightActions={() => <RightSwipeActions onDelete={() => deleteTask(index)} />}>
-					<View style={styles.rectangle}>
-					  <Text>{item}</Text>
-					</View>
-				  </Swipeable>
-				</GestureHandlerRootView>
-			  )).reverse()}
+		
+		<LinearGradient
+		colors={['#8e54e9','#4776e6','#8e54e9']} // Define your gradient colors here
+		start={{ x: 0, y: 0 }}
+		end={{ x: 1, y: 1 }}
+		style={styles.container}>
+		
+		  
+			<View style={{flexDirection:'row', marginBottom: 20, paddingTop: 50}}>
+				<TouchableOpacity onPress={()=>navigation.navigate('Home')}>
+					<Image source={require('../assets/back_2.png')} style={{ width: 40, height: 40}}/>					
+				</TouchableOpacity>
+				<Text style={styles.titleContainer}>COMPLETED TASKS</Text>
+			</View>
+				<ScrollView>
+				{completedTasks.map((item, index) => (
+					<GestureHandlerRootView key={index}>
+					<Swipeable renderRightActions={() => <RightSwipeActions onDelete={() => deleteTask(index)} />}>
+						<View style={styles.rectangle}>
+						<Text style={{fontFamily: 'Quicksand'}}>{item}</Text>
+						</View>
+					</Swipeable>
+					</GestureHandlerRootView>
+				)).reverse()}
 			</ScrollView>
-		  </View>
-		</SafeAreaView>
+		  
+		
+		</LinearGradient>
 	  </>
 	);
   };
   
   const styles = StyleSheet.create({
 	container: {
-	  marginBottom: 170,
+	  
 	  flex: 1,
+	  
 	},
   
 	titleContainer: {
-	  alignSelf: 'center',
-	  fontSize: 20,
-	  marginBottom: 10,
+		
+		fontSize: 20,	
+		
+		
+		fontFamily: 'Quicksand',
+		color: 'white',
 	},
   
 	rectangle: {
@@ -129,6 +146,18 @@ const RightSwipeActions = ({ onDelete }) => {
 	  height: 50,
 	  alignItems: 'center',
 	  justifyContent: 'space-between',
+	  
+	},
+	
+	TitleText: {
+		alignSelf: 'center',
+		fontSize: 20,
+		fontWeight: 'bold',
+		marginBottom: 10,
+		justifyContent: 'center',
+		marginLeft: 95,
+		
+		
 	},
   });
   
