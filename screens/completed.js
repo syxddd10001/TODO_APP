@@ -103,7 +103,7 @@ const RightSwipeActions = ({ onDelete }) => {
 				</TouchableOpacity>
 				<Text style={styles.titleContainer}>COMPLETED TASKS</Text>
 			</View>
-				<ScrollView>
+			<ScrollView>
 				{completedTasks.map((item, index) => (
 					<GestureHandlerRootView key={index}>
 					<Swipeable renderRightActions={() => <RightSwipeActions onDelete={() => deleteTask(index)} />}>
@@ -131,6 +131,7 @@ const RightSwipeActions = ({ onDelete }) => {
 	titleContainer: {
 		
 		fontSize: 20,	
+		alignSelf: 'center',
 		
 		
 		fontFamily: 'Quicksand',

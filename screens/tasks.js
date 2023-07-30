@@ -198,8 +198,7 @@ const TaskScreen = ({navigation}) =>{
 		start={{ x: 0, y: 0 }}
 		end={{ x: 1, y: 1 }}
 		style={styles.container2}>
-		<SafeAreaView style={styles.container}>
-			<SafeAreaView>
+		<View style={{flex:1, marginBottom: 95}}>	
 				<View style={{flexDirection:'row', marginBottom: 20, paddingTop: 50}}>
 					<TouchableOpacity onPress={()=>navigation.navigate('Home')}>
 						<Image source={require('../assets/back_2.png')} style={{ width: 45, height: 45, color: 'transparent'}}/>					
@@ -215,13 +214,13 @@ const TaskScreen = ({navigation}) =>{
 					))}
 				</ScrollView>
 				
-			</SafeAreaView>
-		</SafeAreaView>
+		</View>
+
 		<SafeAreaView style={{}}>		
 				<KeyboardAvoidingView 
 					behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
 					style={styles.writeTaskWrapper}>
-				<TextInput style={styles.input} placeholder={'Write a task'} value={task} onChangeText={text=>setTask(text)}/>
+				<TextInput onSubmitEditing={() => handleAddTask()} style={styles.input} placeholder={'Write a task'} value={task} onChangeText={text=>setTask(text)}/>
 
 				<TouchableOpacity style={styles.textWrapper} onPress={() => handleAddTask()}>
 				
@@ -243,7 +242,7 @@ const TaskScreen = ({navigation}) =>{
 const styles = StyleSheet.create({
 
 			container:{			
-				marginBottom: 170,
+				
 				flex:1
 			},		
 			container2:{			
@@ -312,9 +311,9 @@ const styles = StyleSheet.create({
 
 			TitleText: {
 				
-				fontSize: 24,
+				fontSize: 20,
 				fontFamily: 'Quicksand',
-				marginBottom: 10,
+				alignSelf: 'center',
 				
 				
 				color: 'white',
