@@ -7,4 +7,5 @@ What this app does:
 - has a completed tasks tab to view the recently completed items
 
 Preview:
-assets/Screen_Recording_20231230-230031_Expo%20Go.mp4
+https://github.com/syxddd10001/TODO_APP/assets/121273500/e64e708b-bcc1-4c64-bb01-0444010dbb78
+
