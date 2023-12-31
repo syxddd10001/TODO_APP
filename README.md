@@ -7,5 +7,5 @@ What this app does:
 - has a completed tasks tab to view the recently completed items
 
 Preview:
-https://github.com/syxddd10001/TODO_APP/assets/121273500/e64e708b-bcc1-4c64-bb01-0444010dbb78
+https://github.com/syxddd10001/TODO_APP/assets/121273500/1e65c009-cd28-406a-a99d-01e76b896762
 
